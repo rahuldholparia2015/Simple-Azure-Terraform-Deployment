@@ -1,21 +1,33 @@
-name: 'Terraform Deploy with Managed Identity'
+name: 'Terraform Deploy'
 
 on:
   push:
     branches: ['master']
 
+defaults:
+  run:
+    working-directory: ./Terraform-code
+
 jobs:
   terraform:
     name: 'Terraform'
-    # Use the label you assigned when setting up your self-hosted runner
     runs-on: self-hosted
-    defaults:
-      run:
-        working-directory: Terraform-code
+    env:
+      ARM_USE_MSI: true
+      ARM_SUBSCRIPTION_ID: '99c0acb2-ff53-4ac2-8e99-071411ed7ee4'
+      ARM_TENANT_ID: 'a19d6cd0-cccb-447a-ae75-7d3ee4eaa2bb'
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          # Uses the VM's system-assigned identity to login
+          auth-type: IDENTITY
+          tenant-id: 'a19d6cd0-cccb-447a-ae75-7d3ee4eaa2bb'
+          subscription-id: '99c0acb2-ff53-4ac2-8e99-071411ed7ee4'
 
       - name: Terraform Init
         run: terraform init
@@ -24,5 +36,5 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        # if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve
