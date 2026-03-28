@@ -9,6 +9,9 @@ jobs:
     name: 'Terraform'
     # Use the label you assigned when setting up your self-hosted runner
     runs-on: self-hosted
+    defaults:
+      run:
+        working-directory: Terraform-code
 
     steps:
       - name: Checkout
@@ -21,5 +24,5 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        # if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform apply -auto-approve
