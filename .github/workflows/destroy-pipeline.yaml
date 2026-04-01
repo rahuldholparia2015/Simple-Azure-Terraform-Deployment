@@ -33,4 +33,4 @@ jobs:
         run: terraform init
 
       - name: Terraform Destroy
-        run: terraform destroy
+        run: terraform destroy -auto-approve -var-file="../stages/prod.tfvars"
