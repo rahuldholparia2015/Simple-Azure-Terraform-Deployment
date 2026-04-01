@@ -1,3 +1,4 @@
+# Just added comment for testing
 name: 'Azure Terraform Multi-Stage'
 
 on:
